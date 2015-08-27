@@ -10,4 +10,5 @@ RUN apt-get install --no-install-recommends ros-jade-robot ros-jade-perception r
 WORKDIR /root/catkin_ws/
 RUN cd src && git clone https://github.com/danielchalef/neato_robot.git
 
-RUN catkin_make && catkin_make install
+RUN apt-get install build-essential -y
+RUN bash -c "source /opt/ros/jade/setup.sh; catkin_make && catkin_make install"
