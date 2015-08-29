@@ -3,14 +3,17 @@ MAINTAINER Daniel Chalef <daniel.chalef@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN echo "deb http://ppa.launchpad.net/fo0bar/rpi2/ubuntu vivid main" > /etc/apt/sources.list.d/fo0bar-ubuntu-rpi2-vivid.list
+#RUN echo "deb http://ppa.launchpad.net/fo0bar/rpi2/ubuntu vivid main" > /etc/apt/sources.list.d/fo0bar-ubuntu-rpi2-vivid.list
+
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:fo0bar/rpi2
 
 RUN apt-get update; apt-get upgrade -y
 
 # For debugging and development
 RUN apt-get install -y strace picocom
 
-RUN apt-get install --no-install-recommends libraspberrypi-dev libraspberrypi0 python-serial ros-jade-robot ros-jade-perception ros-jade-robot-localization ros-jade-opencv3 ros-jade-rospy build-essential -y
+RUN apt-get install -y --no-install-recommends libraspberrypi-dev libraspberrypi0 python-serial ros-jade-robot ros-jade-perception ros-jade-robot-localization ros-jade-opencv3 ros-jade-rospy build-essential 
 
 WORKDIR /root/catkin_ws/
 RUN cd src && git clone https://github.com/danielchalef/neato_robot.git
@@ -47,4 +50,4 @@ RUN sed -i 's/\/home\/pi\/userland/\/root\/vc/g' src/raspicam_node/CMakeLists.tx
 RUN sed -i 's:/opt/vc/include:/root/vc:g' src/raspicam_node/CMakeLists.txt
 RUN sed -i 's:/opt/vc/lib:/usr/lib:g' src/raspicam_node/CMakeLists.txt
 
-RUN bash -c "source /root/ros/jade/setup.sh; catkin_make && catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/jade/ install && chmod +x /opt/ros/jade/share/neato_node/nodes/neato.py"
+RUN bash -c "source /opt/ros/jade/setup.sh; catkin_make && catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/jade/ install && chmod +x /opt/ros/jade/share/neato_node/nodes/neato.py"
